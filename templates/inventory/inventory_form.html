@@ -9,8 +9,7 @@
     </div>
     <div class="card-body p-4">
         <form method="POST" autocomplete="off">
-            {% csrf_with_token %}
-            {% csrf_token %}
+        {% csrf_token %}
             
             {% include 'includes/form.html' %}
             
