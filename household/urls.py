@@ -19,7 +19,8 @@ from django.urls import path
 from .views import (
     HomePageView, 
     InventoryListView, InventoryCreateView, InventoryUpdateView, InventoryDeleteView,
-    RequestListView, RequestCreateView, RequestUpdateView, RequestDeleteView
+    RequestListView, RequestCreateView, RequestUpdateView, RequestDeleteView,
+    ExpenseListView, ExpenseCreateView, ExpenseUpdateView, ExpenseDeleteView
 )
 
 urlpatterns = [
@@ -32,10 +33,16 @@ urlpatterns = [
     path('inventory/<int:pk>/edit/', InventoryUpdateView.as_view(), name='inventory-edit'),
     path('inventory/<int:pk>/delete/', InventoryDeleteView.as_view(), name='inventory-delete'),
     
-    # Request Queues CRUD Routing Loop
+    # Request Queues CRUD
     path('requests/', RequestListView.as_view(), name='request-list'),
     path('requests/new/', RequestCreateView.as_view(), name='request-create'),
     path('requests/<int:pk>/edit/', RequestUpdateView.as_view(), name='request-edit'),
     path('requests/<int:pk>/delete/', RequestDeleteView.as_view(), name='request-delete'),
+    
+    # Expense Matrix CRUD Routing Loop
+    path('expenses/', ExpenseListView.as_view(), name='expense-list'),
+    path('expenses/new/', ExpenseCreateView.as_view(), name='expense-create'),
+    path('expenses/<int:pk>/edit/', ExpenseUpdateView.as_view(), name='expense-edit'),
+    path('expenses/<int:pk>/delete/', ExpenseDeleteView.as_view(), name='expense-delete'),
 ]
 

@@ -22,7 +22,7 @@
                 <ul class="nav flex-column gap-1">
                     <li class="nav-item"><a href="{% url 'home' %}" class="nav-link rounded">Dashboard</a></li>
                     <li class="nav-item"><a href="{% url 'inventory-list' %}" class="nav-link rounded {% if 'inventory' in request.path %}active{% endif %}">📦 Inventory Supplies</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link rounded">💰 Expense Outlays</a></li>
+                    <li class="nav-item"><a href="{% url 'expense-list' %}" class="nav-link rounded {% if 'expense' in request.path %}active{% endif %}">💰 Expense Outlays</a></li>
                     <li class="nav-item"><a href="{% url 'request-list' %}" class="nav-link rounded {% if 'request' in request.path %}active{% endif %}">📋 Personal Requests</a></li>
                 </ul>
             </div>

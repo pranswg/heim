@@ -50,3 +50,31 @@ class RequestItem(BaseModel):
 
     def __str__(self):
         return f"{self.item_name} requested by {self.requester.username} [{self.status}]"
+
+class OutOfPocketTransaction(models.Model):
+    CATEGORY_CHOICES = [
+        ('Groceries', 'Groceries'),
+        ('Medicines', 'Medicines & Medical'),
+        ('Utilities', 'Utilities & Bills'),
+        ('Maintenance', 'Home Maintenance'),
+        ('Other', 'Other Household Misc'),
+    ]
+
+    METHOD_CHOICES = [
+        ('Cash', 'Cash'),
+        ('Credit Card', 'Credit Card'),
+        ('Debit Card', 'Debit Card'),
+        ('Digital Wallet', 'Digital Wallet / QR'),
+    ]
+
+    item_name = models.CharField(max_length=200)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_date = models.DateTimeField(auto_now_add=True)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='Groceries')
+    payment_method = models.CharField(max_length=50, choices=METHOD_CHOICES, default='Cash')
+    
+    # Automatically tracks who spent the money
+    payer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expenses')
+
+    def __str__(self):
+        return f"{self.item_name} - ${self.amount} by {self.payer.username}"
