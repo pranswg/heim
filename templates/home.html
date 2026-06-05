@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard | Heim{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <h3 class="mb-3 fw-bold text-dark">Platform Status Overview</h3>
+    <p class="text-muted mb-4">Real-time compilation of metrics across your home data environment.</p>
+    
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 border-start border-primary border-4 p-3">
+                <div class="text-muted small uppercase fw-bold">Inventory Framework</div>
+                <h4 class="fw-bold my-2 text-primary">Active Logs</h4>
+                <a href="#" class="small text-decoration-none">Review stock items &rarr;</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 border-start border-success border-4 p-3">
+                <div class="text-muted small uppercase fw-bold">Financial Matrix</div>
+                <h4 class="fw-bold my-2 text-success">Transactional Records</h4>
+                <a href="#" class="small text-decoration-none">Review tracking matrix &rarr;</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 border-start border-warning border-4 p-3">
+                <div class="text-muted small uppercase fw-bold">Supply Requests</div>
+                <h4 class="fw-bold my-2 text-warning">Queue Processing</h4>
+                <a href="#" class="small text-decoration-none">Review operational logs &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

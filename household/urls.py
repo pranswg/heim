@@ -16,7 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from .views import HomePageView, InventoryListView, InventoryCreateView, InventoryUpdateView, InventoryDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', HomePageView.as_view(), name='home'),
+    
+    # Inventory CRUD Routing Loop
+    path('inventory/', InventoryListView.as_view(), name='inventory-list'),
+    path('inventory/new/', InventoryCreateView.as_view(), name='inventory-create'),
+    path('inventory/<int:pk>/edit/', InventoryUpdateView.as_view(), name='inventory-edit'),
+    path('inventory/<int:pk>/delete/', InventoryDeleteView.as_view(), name='inventory-delete'),
 ]
