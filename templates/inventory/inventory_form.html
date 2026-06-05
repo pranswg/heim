@@ -1,23 +1,82 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if object %}Modify Item{% else %}Add Item{% endif %} | Heim{% endblock %}
+{% block title %}{% if object %}Edit Item{% else %}Add Item{% endif %} | Heim{% endblock %}
 
 {% block content %}
-<div class="card shadow-sm border-0 mx-auto" style="max-width: 600px;">
-    <div class="card-header bg-dark text-white p-3">
-        <h4 class="mb-0 fs-5 fw-bold">{% if object %}📝 Modify Inventory Record{% else %}✨ Add New Inventory Item{% endif %}</h4>
+<div class="card shadow-sm border-0 mx-auto" style="max-width: 600px; border-radius: 16px; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;">
+    <div class="p-4 border-bottom" style="background: #ffffff; border-color: #e2e8f0 !important;">
+        <h4 class="mb-0 fw-bold" style="color: #0f172a; font-size: 1.25rem; letter-spacing: -0.3px;">
+            {% if object %}Edit Item Details{% else %}Add New Supply Item{% endif %}
+        </h4>
+        <p class="text-muted small mb-0 mt-1">
+            {% if object %}Make your changes to the item information below.{% else %}Fill in the details below to add a new item to your supplies.{% endif %}
+        </p>
     </div>
     <div class="card-body p-4">
         <form method="POST" autocomplete="off">
         {% csrf_token %}
             
-            {% include 'includes/form.html' %}
+            <!-- Injected form fields styled by Django/includes framework -->
+            <div class="custom-form-wrapper">
+                {% include 'includes/form.html' %}
+                
+                <!-- Added Dropdown for Units of Measurement -->
+                <!-- Change the 'name' attribute below if your Django model expects a different field name (e.g., 'unit_of_measurement') -->
+                <div class="form-group mb-3">
+                    <label for="id_unit" class="form-label">Unit of Measurement</label>
+                    <select name="unit" id="id_unit" class="form-select">
+                        <option value="pcs" {% if object.unit == 'pcs' %}selected{% endif %}>Pieces (pcs)</option>
+                        <option value="kg" {% if object.unit == 'kg' %}selected{% endif %}>Kilograms (kg)</option>
+                        <option value="g" {% if object.unit == 'g' %}selected{% endif %}>Grams (g)</option>
+                        <option value="l" {% if object.unit == 'l' %}selected{% endif %}>Liters (L)</option>
+                        <option value="ml" {% if object.unit == 'ml' %}selected{% endif %}>Milliliters (ml)</option>
+                        <option value="box" {% if object.unit == 'box' %}selected{% endif %}>Boxes</option>
+                        <option value="pack" {% if object.unit == 'pack' %}selected{% endif %}>Packs</option>
+                    </select>
+                </div>
+            </div>
             
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <a href="{% url 'inventory-list' %}" class="btn btn-light border">Cancel</a>
-                <button type="submit" class="btn btn-warning fw-bold">Save Record</button>
+            <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top" style="border-color: #f1f5f9 !important;">
+                <a href="{% url 'inventory-list' %}" class="btn btn-light px-4 py-2 fw-medium" style="border-radius: 10px; border-color: #cbd5e1; color: #475569; font-size: 0.9rem;">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-indigo px-4 py-2 fw-semibold text-white" style="background-color: var(--accent-color); border-radius: 10px; font-size: 0.9rem; border: none; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);">
+                    Save Item
+                </button>
             </div>
         </form>
     </div>
 </div>
+
+<style>
+    /* Styled framework for custom dropdowns and text controls */
+    .custom-form-wrapper input, 
+    .custom-form-wrapper select, 
+    .custom-form-wrapper textarea {
+        border-radius: 10px !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 10px 14px !important;
+        font-size: 0.95rem !important;
+        color: #1e293b !important;
+        background-color: #fff !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    .custom-form-wrapper input:focus, 
+    .custom-form-wrapper select:focus, 
+    .custom-form-wrapper textarea:focus {
+        border-color: var(--accent-color) !important;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
+        outline: none !important;
+    }
+    .custom-form-wrapper label {
+        font-weight: 600 !important;
+        color: #475569 !important;
+        font-size: 0.875rem !important;
+        margin-bottom: 6px !important;
+        display: block;
+    }
+    .custom-form-wrapper .mb-3, .custom-form-wrapper .form-group {
+        margin-bottom: 1.25rem !important;
+    }
+</style>
 {% endblock %}

@@ -1,21 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}{% if object %}Modify Request{% else %}Submit Request{% endif %} | Heim{% endblock %}
+{% block title %}{% if object %}Edit Request{% else %}New Request{% endif %} | Heim{% endblock %}
 
 {% block content %}
-<div class="card shadow-sm border-0 mx-auto" style="max-width: 600px;">
-    <div class="card-header bg-dark text-white p-3">
-        <h4 class="mb-0 fs-5 fw-bold">{% if object %}📝 Modify Request Parameters{% else %}📥 Submit Household Request{% endif %}</h4>
+<div class="container-fluid px-0 animate-fade-in" style="max-width: 580px;">
+    
+    <!-- Modern Header Block -->
+    <div class="mb-4">
+        <h3 class="mb-1 fw-bold text-dark" style="letter-spacing: -0.5px;">
+            {% if object %}Edit Request Details{% else %}Submit New Request{% endif %}
+        </h3>
+        <p class="text-muted mb-0" style="font-size: 0.95rem;">
+            {% if object %}Update your existing household request parameters below.{% else %}Create a request for maintenance, chores, or general household needs.{% endif %}
+        </p>
     </div>
-    <div class="card-body p-4">
-        <form method="POST" autocomplete="off">
-            {% csrf_token %}
-            {% include 'includes/form.html' %}
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <a href="{% url 'request-list' %}" class="btn btn-light border">Cancel</a>
-                <button type="submit" class="btn btn-warning fw-bold">Confirm Request</button>
-            </div>
-        </form>
+
+    <!-- Premium Clean Form Card -->
+    <div class="card border-0 shadow-sm p-2" style="background: white; border-radius: 16px;">
+        <div class="card-body p-4">
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+                
+                <!-- Renders the custom styled fields from your include file -->
+                <div class="form-container">
+                    {% include 'includes/form.html' %}
+                </div>
+                
+                <!-- Visual Separator Line -->
+                <hr class="my-4" style="border-color: #f1f5f9; border-width: 2px;">
+
+                <!-- Action Button Group -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'request-list' %}" class="btn btn-link text-decoration-none fw-semibold text-muted px-3 py-2" style="font-size: 0.9rem;">
+                        Cancel
+                    </a>
+                    
+                    <button type="submit" class="btn text-white px-4 py-2 shadow-sm d-flex align-items-center gap-2" style="background-color: var(--accent-color); border-radius: 10px; font-weight: 600; font-size: 0.9rem;">
+                        <i data-lucide="send" style="width: 16px; height: 16px;"></i> Send Request
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<script>
+    if (window.lucide) { 
+        lucide.createIcons(); 
+    }
+</script>
 {% endblock %}

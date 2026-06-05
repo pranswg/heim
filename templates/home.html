@@ -4,32 +4,116 @@
 {% block title %}Dashboard | Heim{% endblock %}
 
 {% block content %}
-<div class="container-fluid px-0">
-    <h3 class="mb-3 fw-bold text-dark">Platform Status Overview</h3>
-    <p class="text-muted mb-4">Real-time compilation of metrics across your home data environment.</p>
+<!-- Welcome Header Block matching base.html layout spacing -->
+<div class="mb-5 animate-fade-in">
+    <h3 class="mb-1 fw-bold text-dark" style="letter-spacing: -0.5px;">Dashboard Overview</h3>
+    <p class="text-muted mb-0" style="font-size: 0.95rem;">A quick summary of your home's supplies, expenses, and pending tasks.</p>
+</div>
+
+<style>
+    /* Sleek card styling using variables from your base.html */
+    .dashboard-card {
+        background: #ffffff;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.01);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
     
-    <div class="row g-3">
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 border-start border-primary border-4 p-3">
-                <div class="text-muted small uppercase fw-bold">Inventory Framework</div>
-                <h4 class="fw-bold my-2 text-primary">Active Logs</h4>
-                <a href="#" class="small text-decoration-none">Review stock items &rarr;</a>
+    .dashboard-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.04);
+        border-color: #cbd5e1;
+    }
+
+    /* Icon Containers built around standard Bootstrap 5 theme colors */
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .card-action-link {
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        margin-top: auto; /* Pushes the button to the bottom of the card uniformly */
+        padding-top: 16px;
+    }
+
+    .dashboard-card:hover .card-action-link {
+        gap: 10px;
+    }
+</style>
+
+<!-- Bento Grid Layout Container -->
+<div class="row g-4 animate-fade-in">
+    
+    <!-- Card 1: Pantry Inventory Framework -->
+    <div class="col-12 col-md-4">
+        <div class="dashboard-card">
+            <div class="icon-box bg-primary bg-opacity-10 text-primary">
+                <i data-lucide="package" style="width: 22px; height: 22px;"></i>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 border-start border-success border-4 p-3">
-                <div class="text-muted small uppercase fw-bold">Financial Matrix</div>
-                <h4 class="fw-bold my-2 text-success">Transactional Records</h4>
-                <a href="#" class="small text-decoration-none">Review tracking matrix &rarr;</a>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 border-start border-warning border-4 p-3">
-                <div class="text-muted small uppercase fw-bold">Supply Requests</div>
-                <h4 class="fw-bold my-2 text-warning">Queue Processing</h4>
-                <a href="#" class="small text-decoration-none">Review operational logs &rarr;</a>
-            </div>
+            <span class="text-muted small text-uppercase fw-bold tracking-wider" style="font-size: 0.75rem;">Current Inventory</span>
+            <h4 class="fw-bold my-2 text-dark" style="font-size: 1.35rem;">Supplies & Stock</h4>
+            <p class="text-secondary small mb-4">Monitor household stock tracking sheets and low quantity thresholds.</p>
+            
+            <a href="{% url 'inventory-list' %}" class="card-action-link text-decoration-none text-primary">
+                View stock items <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
         </div>
     </div>
+    
+    <!-- Card 2: Expense Financial Ledger -->
+    <div class="col-12 col-md-4">
+        <div class="dashboard-card">
+            <div class="icon-box bg-success bg-opacity-10 text-success">
+                <i data-lucide="wallet" style="width: 22px; height: 22px;"></i>
+            </div>
+            <span class="text-muted small text-uppercase fw-bold tracking-wider" style="font-size: 0.75rem;">Finance Tracking</span>
+            <h4 class="fw-bold my-2 text-dark" style="font-size: 1.35rem;">Recent Expenses</h4>
+            <p class="text-secondary small mb-4">Monitor out-of-pocket tracking logs and collective expenditures.</p>
+            
+            <a href="{% url 'expense-list' %}" class="card-action-link text-decoration-none text-success">
+                View spending logs <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Card 3: Care Shopping Requests -->
+    <div class="col-12 col-md-4">
+        <div class="dashboard-card">
+            <div class="icon-box bg-indigo bg-opacity-10 style-icon" style="color: var(--accent-color); background-color: rgba(99, 102, 241, 0.1);">
+                <i data-lucide="clipboard-list" style="width: 22px; height: 22px;"></i>
+            </div>
+            <span class="text-muted small text-uppercase fw-bold tracking-wider" style="font-size: 0.75rem;">Shopping Requests</span>
+            <h4 class="fw-bold my-2 text-dark" style="font-size: 1.35rem;">Pending Requests</h4>
+            <p class="text-secondary small mb-4">Track item care metrics, priority levels, and fulfillment requests.</p>
+            
+            <a href="{% url 'request-list' %}" class="card-action-link text-decoration-none style-link" style="color: var(--accent-color);">
+                View pending list <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+        </div>
+    </div>
+
 </div>
+
+<!-- Auto-execution of Lucide icons initialization exclusively for this scope block -->
+<script>
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+</script>
 {% endblock %}

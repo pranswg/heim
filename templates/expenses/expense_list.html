@@ -1,68 +1,115 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Expenses | Heim{% endblock %}
+{% block title %}Expense Log | Heim{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3 class="fw-bold mb-1">💰 Out-of-Pocket Expense Logbook</h3>
-        <p class="text-muted small mb-0">Track household operational expenditures and micro-purchases.</p>
+<div class="container-fluid px-0 animate-fade-in">
+    <!-- Header Block -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-5">
+        <div>
+            <h3 class="mb-1 fw-bold text-dark" style="letter-spacing: -0.5px;">Recent Expenses</h3>
+            <p class="text-muted mb-0" style="font-size: 0.95rem;">Track out-of-pocket ledger transactions and collective shared expenditures.</p>
+        </div>
+        <a href="{% url 'expense-create' %}" class="btn text-white px-4 py-2 d-flex align-items-center gap-2 shadow-sm" style="background-color: var(--accent-color); border-radius: 10px; font-weight: 600; font-size: 0.9rem;">
+            <i data-lucide="plus" style="width: 18px; height: 18px;"></i> Log New Expense
+        </a>
     </div>
-    <a href="{% url 'expense-create' %}" class="btn btn-warning fw-bold">+ Add New Expense</a>
+
+    <!-- Running Total Bento Highlight Cards Panel -->
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card border-0 p-4 shadow-sm" style="background: white; border-radius: 16px; border-left: 4px solid #22c55e !important;">
+                <span class="text-muted small text-uppercase fw-bold tracking-wider" style="font-size: 0.725rem;">Total Outlay Summary</span>
+                <h2 class="fw-bold my-1 text-dark" style="letter-spacing: -1px;">₱{{ grand_total|default:"0.00"|floatformat:2 }}</h2>
+                <small class="text-muted d-flex align-items-center gap-1 mt-1">
+                    <i data-lucide="credit-card" style="width: 12px; height: 12px;"></i> PHP Financial Ledger Scope
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card border-0 p-3 mb-4 shadow-sm header-node" style="background: white;">
+        <form method="GET" action="" class="row g-2">
+            <div class="col-12 col-md-5 col-lg-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0 text-muted" style="border-radius: 10px 0 0 10px;">
+                        <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                    </span>
+                    <input type="text" name="q" class="form-control border-start-0 ps-1" placeholder="Search receipt or descriptive vouchers..." value="{{ request.GET.q }}" style="border-radius: 0 10px 10px 0; font-size: 0.9rem;">
+                </div>
+            </div>
+            <div class="col-12 col-md-2">
+                <button class="btn btn-dark w-100 fw-semibold px-3" type="submit" style="border-radius: 10px; font-size: 0.9rem;">Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Clean Premium Ledger Data Table Grid -->
+    <div class="card border-0 shadow-sm" style="background: white; border-radius: 16px; overflow: hidden;">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.925rem;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #f1f5f9;">
+                        <th class="text-uppercase tracking-wider fw-bold text-muted py-3 px-4" style="font-size: 0.75rem;">Purchased Item</th>
+                        <th class="text-uppercase tracking-wider fw-bold text-muted py-3" style="font-size: 0.75rem;">Category</th>
+                        <th class="text-uppercase tracking-wider fw-bold text-muted py-3" style="font-size: 0.75rem;">Buyer / Payer</th>
+                        <th class="text-uppercase tracking-wider fw-bold text-muted py-3" style="font-size: 0.75rem;">Method</th>
+                        <th class="text-uppercase tracking-wider fw-bold text-muted py-3" style="font-size: 0.75rem;">Cost</th>
+                        <th class="text-uppercase tracking-wider fw-bold text-muted py-3 text-end px-4" style="font-size: 0.75rem;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in expenses %}
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td class="py-3 px-4">
+                            <div>
+                                <span class="fw-semibold text-dark d-block mb-0.5">{{ item.item_name }}</span>
+                                <small class="text-muted d-flex align-items-center gap-1">
+                                    <i data-lucide="calendar" style="width: 12px; height: 12px;"></i> {{ item.transaction_date|date:"M d, Y" }}
+                                </small>
+                            </div>
+                        </td>
+                        <td class="py-3">
+                            <span class="badge bg-light text-secondary border border-light px-2.5 py-1.5 font-medium" style="font-size: 0.75rem; border-radius: 6px;">{{ item.category }}</span>
+                        </td>
+                        <td class="text-secondary py-3">
+                            <div class="d-flex align-items-center gap-1.5">
+                                <div class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center text-secondary" style="width: 22px; height: 22px; font-size: 0.7rem; font-weight: 700;">
+                                    {{ item.payer.username|slice:":1"|upper }}
+                                </div>
+                                <span>{{ item.payer.username }}</span>
+                            </div>
+                        </td>
+                        <td class="py-3"><span class="small font-monospace text-muted text-uppercase" style="background: #f8fafc; padding: 3px 6px; border-radius: 4px;">{{ item.payment_method }}</span></td>
+                        <td class="py-3 fw-bold text-dark" style="font-size: 0.95rem;">₱{{ item.amount }}</td>
+                        <td class="text-end py-3 px-4">
+                            <div class="d-inline-flex gap-2">
+                                <a href="{% url 'expense-edit' item.pk %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 8px;">
+                                    <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+                                </a>
+                                <a href="{% url 'expense-delete' item.pk %}" class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 8px;">
+                                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i data-lucide="wallet" class="mb-2 text-muted" style="width: 32px; height: 32px; stroke-width: 1.5;"></i>
+                            <p class="mb-0 small fw-medium">No recorded expense ledger vouchers matched parameters.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% include 'includes/pagination.html' %}
 </div>
 
-<div class="card bg-dark text-white p-3 mb-4 border-0 shadow-sm">
-    <div class="d-flex justify-content-between align-items-center">
-        <span>Combined Running Expenditures (Filtered View):</span>
-        <h3 class="fw-bold text-warning mb-0">₱{{ grand_total|floatformat:2 }}</h3>
-    </div>
-</div>
-
-<form method="GET" action="" class="mb-3">
-    <div class="input-group shadow-sm">
-        <input type="text" name="q" class="form-control" placeholder="Search receipt items..." value="{{ request.GET.q }}">
-        <button class="btn btn-dark" type="submit">Search</button>
-    </div>
-</form>
-
-<div class="card shadow-sm border-0">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="table-dark">
-                <tr>
-                    <th>Purchased Item</th>
-                    <th>Category</th>
-                    <th>Buyer</th>
-                    <th>Payment Type</th>
-                    <th>Cost</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in expenses %}
-                <tr>
-                    <td>
-                        <strong>{{ item.item_name }}</strong>
-                        <br><small class="text-muted">📅 {{ item.transaction_date|date:"M d, Y" }}</small>
-                    </td>
-                    <td><span class="badge bg-light text-dark border">{{ item.category }}</span></td>
-                    <td><span class="text-secondary">💳 {{ item.payer.username }}</span></td>
-                    <td><span class="small font-monospace">{{ item.payment_method }}</span></td>
-                    <td><span class="fw-bold text-success">₱{{ item.amount }}</span></td>
-                    <td class="text-end">
-                        <a href="{% url 'expense-edit' item.pk %}" class="btn btn-sm btn-outline-dark me-1">Edit</a>
-                        <a href="{% url 'expense-delete' item.pk %}" class="btn btn-sm btn-outline-danger">Remove</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center text-muted py-4">No expense receipts cataloged yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-{% include 'includes/pagination.html' %}
+<script>if (window.lucide) { lucide.createIcons(); }</script>
 {% endblock %}
