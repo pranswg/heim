@@ -129,6 +129,7 @@
         /* --- NAVIGATION GRID --- */
         .nav-container {
             padding: 12px;
+            flex-grow: 1;
         }
 
         .sidebar .nav-link { 
@@ -231,7 +232,7 @@
         
         <hr style="border-color: rgba(255,255,255,0.08); margin: 8px 0 16px 0;">
         
-        <div class="nav-container">
+        <div class="nav-container d-flex flex-column justify-content-between">
             <ul class="nav flex-column gap-1">
                 <li class="nav-item">
                     <a href="{% url 'home' %}" class="nav-link {% if request.path == '/' or 'home' in request.path %}active{% endif %}">
@@ -258,16 +259,37 @@
                     </a>
                 </li>
             </ul>
+
+            {% if user.is_authenticated %}
+            <ul class="nav flex-column mt-auto border-top border-secondary pt-3">
+                <li class="nav-item">
+                    <form method="post" action="{% url 'account_logout' %}" class="d-inline w-100">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link text-start w-100 border-0 bg-transparent text-danger shadow-none">
+                            <i data-lucide="log-out" class="text-danger"></i>
+                            <span class="nav-label text-danger">Sign Out</span>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+            {% endif %}
         </div>
     </aside>
 
     <main class="main-content p-4 p-md-5" id="mainWorkspace">
         <header class="header-node d-flex justify-content-between align-items-center p-3 px-4 mb-5">
             <h2 class="h6 mb-0 fw-bold text-dark text-uppercase" style="letter-spacing: 0.5px; color: #1e293b !important;">HEIM - Household Expenses Inventory Management</h2>
+            
+            {% if user.is_authenticated %}
             <span class="badge badge-admin rounded-pill px-3 py-2 d-flex align-items-center gap-2">
                 <span class="d-inline-block bg-success rounded-circle" style="width: 6px; height: 6px;"></span>
-                Admin Signed In
+                Connected as: {{ user.username }}
             </span>
+            {% else %}
+            <a href="{% url 'account_login' %}" class="btn btn-sm btn-primary rounded-pill px-4">
+                Sign In
+            </a>
+            {% endif %}
         </header>
         
         <div class="content-body animate-fade-in">

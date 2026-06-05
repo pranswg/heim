@@ -137,3 +137,4 @@ class ExpenseDeleteView(DeleteView):
     model = OutOfPocketTransaction
     template_name = 'expenses/expense_confirm_delete.html'
     success_url = reverse_lazy('expense-list')
+
