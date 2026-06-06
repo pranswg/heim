@@ -234,6 +234,7 @@
         
         <div class="nav-container d-flex flex-column justify-content-between">
             <ul class="nav flex-column gap-1">
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a href="{% url 'home' %}" class="nav-link {% if request.path == '/' or 'home' in request.path %}active{% endif %}">
                         <i data-lucide="layout-dashboard"></i> 
@@ -258,6 +259,14 @@
                         <span class="nav-label">Requests</span>
                     </a>
                 </li>
+                {% else %}
+                <li class="nav-item">
+                    <a href="{% url 'account_login' %}" class="nav-link active">
+                        <i data-lucide="log-in"></i> 
+                        <span class="nav-label">Welcome Portal</span>
+                    </a>
+                </li>
+                {% endif %}
             </ul>
 
             {% if user.is_authenticated %}
@@ -287,7 +296,7 @@
             </span>
             {% else %}
             <a href="{% url 'account_login' %}" class="btn btn-sm btn-primary rounded-pill px-4">
-                Sign In
+                Sign In with Google
             </a>
             {% endif %}
         </header>
